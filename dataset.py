@@ -5,8 +5,9 @@ import random
 from typing import List
 
 from bean import CarData
-
 from torch.utils.data import Dataset
+
+
 class CustomerDataset(Dataset):
     def __init__(self, car_data_list: List[CarData]):
         self.data = car_data_list
@@ -20,14 +21,14 @@ class CustomerDataset(Dataset):
     def __getitem__(self, idx):
         x = random.choice(self.data[idx].feature_list)
 
-        if random.random() < self.same_ratio:
+        if random.random() > self.same_ratio:
             other_index = random.choice(self.idx_list)
             if other_index == idx:
-                is_same = True
+                is_same = 1.0
             else:
-                is_same = False
+                is_same = 0.0
             y = random.choice(self.data[other_index].feature_list)
         else:
-            is_same = True
+            is_same = 1.0
             y = random.choice(self.data[idx].feature_list)
         return x, y, is_same
